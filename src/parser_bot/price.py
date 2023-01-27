@@ -4,15 +4,19 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from tofunft_bot.src.parser_bot.data import URL
 from tofunft_bot.src.parser_bot.data import DRIVER
+from tofunft_bot.src.parser_bot.data import USER_AGENT
 
 # Initialize Chrome webdriver with options to disable GPU and automation features
 chrome_options = Options()
+chrome_options.add_argument(f"user-agent={USER_AGENT}")
 chrome_options.add_argument('--disable-gpu')
+chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-blink-features=AutomationControlled')
 webdriver = webdriver.Chrome(executable_path=DRIVER, options=chrome_options)
 
 # Load the webpage in the webdriver
 webdriver.get(URL)
+webdriver.implicitly_wait(1)
 
 # Initialize variables
 current_price = 0
@@ -39,7 +43,7 @@ async def parse_lowest_price():
 
     try:
         webdriver.refresh()
-
+        webdriver.implicitly_wait(1)
         # Get the raw HTML of the webpage
         page_html = webdriver.page_source
 
